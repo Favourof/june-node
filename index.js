@@ -1,6 +1,9 @@
 const express = require("express");
 
 const app = express();
+app.use(express.json());
+
+// 
 const port = 3000;
 
 const product = [
@@ -73,8 +76,17 @@ app.get("/product", (req, res) => {
 
 // add  product
 
+app.post("/product", (req, res) => {
+  // product.push(req.body);
+
+  console.log(req.body);
+  console.log(req.params);
+
+  console.log("product");
+
+  res.status(201).json({ message: "product created succefully", product });
+});
+
 app.listen(port, () => {
   console.log("june node is running on port 3000");
 });
-
-console.log("okay");
