@@ -1,10 +1,12 @@
 const express = require("express");
+const envobj = require("./config/env");
+const { connectDb } = require("./config/db");
 
 const app = express();
 app.use(express.json());
 
-// 
-const port = 3000;
+//
+const port = envobj.port;
 
 const product = [
   {
@@ -87,6 +89,7 @@ app.post("/product", (req, res) => {
   res.status(201).json({ message: "product created succefully", product });
 });
 
+connectDb();
 app.listen(port, () => {
-  console.log("june node is running on port 3000");
+  console.log(`june node is running on port ${port}`);
 });
