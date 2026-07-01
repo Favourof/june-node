@@ -5,11 +5,11 @@ const connectDb = async () => {
   try {
     const db = await mongoose.connect(envobj.mongodb_url);
     if (db) {
-      console.log("Database Connected Successfully");
+      console.log("Database connected Successfully");
     }
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
   }
 };
 
-module.exports = { connectDb };
+module.exports = connectDb;

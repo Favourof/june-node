@@ -1,12 +1,16 @@
 const express = require("express");
 const envobj = require("./config/env");
-const { connectDb } = require("./config/db");
+const morgan = require("morgan");
+const connectDb = require("./config/db");
 
 const app = express();
+const productRoute = require("./routes/product");
 app.use(express.json());
+app.use(morgan("dev"));
 
 //
 const port = envobj.port;
+// const port = process.env.PORT
 
 const product = [
   {
@@ -64,30 +68,14 @@ const product = [
   },
 ];
 
+const appv = "api/v1";
 // welcoming
 app.get("/", (req, res) => {
   res.send("Hello, welcome to june node server");
 });
 
 // for all product
-app.get("/product", (req, res) => {
-  res.send(product);
-});
-
-// get product by id: /product/3
-
-// add  product
-
-app.post("/product", (req, res) => {
-  // product.push(req.body);
-
-  console.log(req.body);
-  console.log(req.params);
-
-  console.log("product");
-
-  res.status(201).json({ message: "product created succefully", product });
-});
+app.use(`/${appv}/product`, productRoute);
 
 connectDb();
 app.listen(port, () => {
