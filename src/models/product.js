@@ -4,8 +4,8 @@ const productSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
-    minlength: [3, "Title must be 6 character long"],
-    maxLength: [12, "Title must not be much than 12 Character"],
+    minlength: [3, "Title must be 3 character long"],
+    maxLength: [30, "Title must not be much than 30 Character"],
   },
   description: {
     type: String,
@@ -15,7 +15,7 @@ const productSchema = new mongoose.Schema({
   },
   price: {
     type: Number,
-    min: [100, "Thr price must be grater than 100"],
+    min: [100, "The price must be grater than 100"],
     required: true,
   },
   category: {

@@ -74,7 +74,7 @@ app.get("/", (req, res) => {
   res.send("Hello, welcome to june node server");
 });
 
-// for all product
+// for all product services
 app.use(`/${appv}/product`, productRoute);
 
 connectDb();
