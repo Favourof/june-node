@@ -5,6 +5,7 @@ const connectDb = require("./config/db");
 
 const app = express();
 const productRoute = require("./routes/product");
+const userRoute = require("./routes/user");
 app.use(express.json());
 app.use(morgan("dev"));
 
@@ -76,6 +77,9 @@ app.get("/", (req, res) => {
 
 // for all product services
 app.use(`/${appv}/product`, productRoute);
+
+// user service Route
+app.use(`/${appv}/auth`, userRoute);
 
 connectDb();
 app.listen(port, () => {

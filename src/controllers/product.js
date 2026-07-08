@@ -61,4 +61,55 @@ const getSingleProduct = async (req, res) => {
     return res.status(400).json({ status: false, message: error.message });
   }
 };
-module.exports = { addProduct, getProduct, getSingleProduct };
+
+const updateProduct = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const product = await Product.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!product) {
+      return res
+        .status(400)
+        .json({ status: false, message: "Product not Found" });
+    }
+
+    return res
+      .status(200)
+      .json({ status: true, message: "product updated Successfully", product });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ status: false, message: error.message });
+  }
+};
+
+const deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const product = await Product.findByIdAndDelete(id);
+
+    if (!product) {
+      return res
+        .status(400)
+        .json({ status: false, message: "Product not found" });
+    }
+
+    return res
+      .status(200)
+      .json({ status: true, message: "Product Deleted Successfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ status: false, message: error.message });
+  }
+};
+
+module.exports = {
+  addProduct,
+  getProduct,
+  getSingleProduct,
+  updateProduct,
+  deleteProduct,
+};
