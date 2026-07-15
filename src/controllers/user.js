@@ -1,3 +1,4 @@
+const userResponse = require("../DTO/userResponse.dto");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 
@@ -34,11 +35,7 @@ const register = async (req, res) => {
     return res.status(201).json({
       status: "true",
       message: "Account Created Successfully",
-      user: {
-        firstName,
-        lastName,
-        email,
-      },
+      user: userResponse(userObj),
     });
   } catch (error) {
     console.log(error);
@@ -46,4 +43,45 @@ const register = async (req, res) => {
   }
 };
 
-module.exports = { register };
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ status: false, message: "Please Input all fields!" });
+    }
+
+    const user = await User.findOne({ email });
+
+    console.log(userResponse(user));
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ status: false, message: "Invalid Credentials" });
+    }
+
+    const comparePassword = await bcrypt.compare(password, user.password);
+
+    if (!comparePassword) {
+      return res
+        .status(400)
+        .json({ status: false, message: "Invalid Credentials" });
+    }
+
+    return res.status(200).json({
+      status: true,
+      message: "login successfully",
+      user: userResponse(user),
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({
+      status: false,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = { register, login };
