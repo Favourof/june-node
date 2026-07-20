@@ -1,6 +1,8 @@
+const envobj = require("../config/env");
 const userResponse = require("../DTO/userResponse.dto");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
   try {
@@ -20,7 +22,7 @@ const register = async (req, res) => {
         .json({ status: false, message: "Invalid Credentials" });
     }
 
-    const saltRound = 10;
+    const saltRound = envobj.saltRound;
 
     const hashPassword = await bcrypt.hash(password, saltRound);
 
@@ -54,7 +56,7 @@ const login = async (req, res) => {
 
     const user = await User.findOne({ email });
 
-    console.log(userResponse(user));
+    // console.log(userResponse(user));
 
     if (!user) {
       return res
@@ -70,10 +72,17 @@ const login = async (req, res) => {
         .json({ status: false, message: "Invalid Credentials" });
     }
 
+    const token = jwt.sign(
+      { user: user._id, name: user.firstName },
+      envobj.jwtSecret,
+      { expiresIn: envobj.expireIn },
+    );
+
     return res.status(200).json({
       status: true,
       message: "login successfully",
       user: userResponse(user),
+      token,
     });
   } catch (error) {
     console.log(error);
