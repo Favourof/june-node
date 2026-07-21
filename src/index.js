@@ -2,6 +2,7 @@ const express = require("express");
 const envobj = require("./config/env");
 const morgan = require("morgan");
 const connectDb = require("./config/db");
+const cors = require("cors");
 
 const app = express();
 const productRoute = require("./routes/product");
@@ -9,6 +10,11 @@ const userRoute = require("./routes/user");
 app.use(express.json());
 app.use(morgan("dev"));
 
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "http://localhost:5174"],
+  }),
+);
 //
 const port = envobj.port;
 // const port = process.env.PORT
@@ -80,6 +86,10 @@ app.use(`/${appv}/product`, productRoute);
 
 // user service Route
 app.use(`/${appv}/auth`, userRoute);
+
+app.use((req, res) => {
+  return res.status(400).json({ status: false, message: "route not found" });
+});
 
 connectDb();
 app.listen(port, () => {
