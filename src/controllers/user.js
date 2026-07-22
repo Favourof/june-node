@@ -73,7 +73,7 @@ const login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { user: user._id, name: user.firstName },
+      { id: user._id, name: user.firstName },
       envobj.jwtSecret,
       { expiresIn: envobj.expireIn },
     );
@@ -93,4 +93,26 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { register, login };
+const authMe = async (req, res) => {
+  try {
+    const userDecode = req.user;
+    console.log(userDecode);
+
+    const user = await User.findById(userDecode.id);
+    console.log(user);
+
+    return res.status(200).json({
+      status: true,
+      message: "login successfully",
+      user: userResponse(user),
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({
+      status: false,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = { register, login, authMe };
